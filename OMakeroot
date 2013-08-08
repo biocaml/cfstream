@@ -4,6 +4,7 @@ open build/OCaml
 .PHONY: lib doc \
         install install_lib install_doc \
         uninstall uninstall_lib \
+        build-test test \
         clean distclean
 
 ################################################################################
@@ -32,6 +33,12 @@ PACKAGES = $(DEPENDENCIES)
 LIB_MODULES[] = CFStream_streamable CFStream_stream CFStream
 
 LIB_SOURCES = $(add-wrapper src/lib, .ml, $(LIB_MODULES))
+
+TEST_APP = $(PROJECT)-test
+TEST_PACKAGES = oUnit
+TEST_MODULES[] = test_stream
+test: _build/src/test/$(TEST_APP)
+  $<
 
 ################################################################################
 # Directory and File Names
@@ -88,6 +95,7 @@ OCAMLPACKS[] = $(PACKAGES)
 .SUBDIRS: .
   mkdir -p _build/src/lib
   mkdir -p _build/src/doc
+  mkdir -p _build/src/test
   vmount(-l, src/, _build/src)
 
   ################################################################################
@@ -111,6 +119,16 @@ OCAMLPACKS[] = $(PACKAGES)
 
     uninstall_lib:
       ocamlfind remove $(LIB_NAME)
+
+
+  ################################################################################
+  # Unit Tests
+  .SUBDIRS: _build/src/test
+     OCAML_LIBS = ../lib/$(LIB_NAME)
+     OCAMLINCLUDES += $(dir ../lib/)
+     OCAMLPACKS[] = $(PACKAGES) $(TEST_PACKAGES)
+     %.ml: ../lib/$(LIB_NAME).cma
+     build-test: $(OCamlProgram $(TEST_APP), $(TEST_MODULES))
 
 
   ################################################################################
