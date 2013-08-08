@@ -3,6 +3,7 @@
     In general, functions that return a stream return a "fresh"
     stream, meaning that their count is set to 0.
 *)
+open Core.Std
 
 (** Type of streams holding values of type ['a]. *)
 type 'a t = 'a Stream.t
@@ -324,6 +325,15 @@ val to_list : 'a t -> 'a list
 
 val of_array : 'a array -> 'a t
 val to_array : 'a t -> 'a array
+
+val of_hashtbl : ('a, 'b) Hashtbl.t -> ('a * 'b) t
+val to_hashtbl : ('a * 'b) t -> ('a, 'b) Hashtbl.t
+
+val of_map : ('a, 'b, 'c) Map.t -> ('a * 'b) t
+val to_map : ('a * 'b) t -> ('a, 'b) Map.Poly.t
+
+val of_set : ('a, 'b) Set.t -> 'a t
+val to_set : 'a t -> 'a Set.Poly.t
 
 val of_string : string -> char t
 

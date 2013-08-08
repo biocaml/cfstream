@@ -470,6 +470,20 @@ let of_array a =
 let to_array strm =
   Array.of_list (to_list strm)
 
+let of_hashtbl t = of_list (Hashtbl.to_alist t)
+let to_hashtbl xs =
+  let t = Hashtbl.Poly.create () in
+  iter xs ~f:(fun (key,data) -> Hashtbl.Poly.replace t ~key ~data);
+  t
+
+let of_map t = of_list (Map.to_alist t)
+let to_map xs =
+  fold xs ~init:Map.Poly.empty ~f:(fun accu (key,data) -> Map.Poly.add accu ~key ~data)
+
+let of_set t = of_list (Set.to_list t)
+let to_set xs =
+  fold xs ~init:Set.Poly.empty ~f:(fun accu e -> Set.Poly.add accu e)
+
 module Infix = struct
   let ( -- ) x y = range x ~until:y
 
