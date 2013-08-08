@@ -117,7 +117,7 @@ OCAMLPACKS[] = $(PACKAGES)
   ################################################################################
   # API Documentation
   .SUBDIRS: _build/src/doc
-    api/index.html: lib intro.txt
+    api/index.html: lib
       rm -rf api
       mkdir api
       ocamlfind ocamldoc \
@@ -131,7 +131,6 @@ OCAMLPACKS[] = $(PACKAGES)
         -colorize-code \
         -sort \
         -html \
-        -intro intro.txt \
         -I ../lib \
         ../lib/*.ml ../lib/*.mli
 
