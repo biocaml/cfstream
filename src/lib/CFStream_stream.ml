@@ -461,6 +461,15 @@ let strings_of_channel ?(buffer_size=65536) inp =
     | len -> Some (String.sub buf ~pos:0 ~len)
   )
 
+let of_array a =
+  Stream.from (fun i ->
+    try Some a.(i)
+    with Invalid_argument _ -> None
+  )
+
+let to_array strm =
+  Array.of_list (to_list strm)
+
 module Infix = struct
   let ( -- ) x y = range x ~until:y
 

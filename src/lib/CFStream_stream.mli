@@ -322,6 +322,9 @@ val uniq : 'a t -> 'a t
 val of_list : 'a list -> 'a t
 val to_list : 'a t -> 'a list
 
+val of_array : 'a array -> 'a t
+val to_array : 'a t -> 'a array
+
 val of_string : string -> char t
 
 
