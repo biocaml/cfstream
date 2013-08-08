@@ -23,7 +23,7 @@ distclean: clean
 PROJECT = cfstream
 VERSION = 1.0-dev
 LIB_NAME = $(PROJECT)
-LIB_DESCRIPTION = "Stream operations in the style of Core's API."
+LIB_DESCRIPTION = Stream operations in the style of Core\'s API.
 API_DOC_TITLE = "CFStream API"
 
 DEPENDENCIES = core
