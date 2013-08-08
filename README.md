@@ -24,3 +24,10 @@ LICENSE
 The CFStream library is distributed according to the LGPL + linking
 exception terms as defined in the LICENSE file included with the
 source code.
+
+CONTACT
+=======
+The library is managed under the Biocaml project, though it is no way
+specific to Biology.
+Website: <http://biocaml.org>
+Mailing List: <http://groups.google.com/group/biocaml>
