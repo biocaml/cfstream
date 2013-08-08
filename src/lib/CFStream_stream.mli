@@ -62,12 +62,6 @@ val is_empty : 'a t -> bool
     infinite if [f] never returns None. *)
 val from : (int -> 'a option) -> 'a t
 
-(** Return a stream of elements as occurring in the given list. *)
-val of_list : 'a list -> 'a t
-
-(** Return a stream characters as occurring in the given string. *)
-val of_string : string -> char t
-
 (** Return a stream of characters by reading from the input
     channel. WARNING: Semantics unclear if the channel is closed
     before the stream reads all of its input. For example, the stream
@@ -235,8 +229,8 @@ val find_map : 'a t -> f:('a -> 'b option) -> 'b option
 
 
 (** {6 Converters}
-    Extract a subset of a stream, map a stream into another type of
-    stream, or convert a stream into another data structure.
+    Extract a subset of a stream or map a stream into another type of
+    stream.
 *)
 
 (** [take xs ~n] builds a fresh stream from [xs] containing the [d]
@@ -320,7 +314,15 @@ val uniq : 'a t -> 'a t
   (** [uniq e] returns a duplicate of [e] with repeated values
       omitted. (similar to unix's [uniq] command) *)
 
+
+(** {6 Data Interchange}
+    Convert/create a stream to/from another data structure.
+*)
+
+val of_list : 'a list -> 'a t
 val to_list : 'a t -> 'a list
+
+val of_string : string -> char t
 
 
 (** {6 Result.t's} *)
