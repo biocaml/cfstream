@@ -29,8 +29,7 @@ API_DOC_TITLE = "CFStream API"
 DEPENDENCIES = core
 PACKAGES = $(DEPENDENCIES)
 
-LIB_MODULES[] =
-  $(removesuffix $(basename $(ls src/lib/*.ml)))
+LIB_MODULES[] = CFStream_streamable CFStream_stream CFStream
 
 LIB_SOURCES = $(add-wrapper src/lib, .ml, $(LIB_MODULES))
 
