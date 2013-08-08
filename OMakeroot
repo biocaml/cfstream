@@ -160,8 +160,3 @@ $(OPAM_PKG_NAME).install:
     foreach(file => ..., $(FOO))
       echo "  "\"_build/src/lib/$(file)\" >> $@
     echo $"]" >> $@
-    echo "" >> $@
-    echo $"bin: [" >> $@
-    echo "  "\"?_build/src/app/dircmp.run\" {\"dircmp\"} >> $@
-    echo "  "\"?_build/src/app/dircmp.opt\" {\"dircmp\"} >> $@
-    echo $"]" >> $@
