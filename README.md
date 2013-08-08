@@ -18,3 +18,9 @@ The implementation is useful for beginners and simple scripts. Robust
 high-performance software should instead use
 [Lwt](http://ocsigen.org/lwt/) or
 [Async](https://ocaml.janestreet.com/ocaml-core/latest/doc/async_core/index.html).
+
+LICENSE
+=======
+The CFStream library is distributed according to the LGPL + linking
+exception terms as defined in the LICENSE file included with the
+source code.
