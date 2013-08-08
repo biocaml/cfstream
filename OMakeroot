@@ -1,0 +1,168 @@
+open build/Common
+open build/OCaml
+
+.PHONY: lib doc \
+        install install_lib install_doc \
+        uninstall uninstall_lib \
+        clean distclean
+
+################################################################################
+# Primary Commands
+install: install_lib
+uninstall: uninstall_lib
+
+clean:
+  rm -rf _build
+
+distclean: clean
+  rm -rf OMakeroot.omc .omakedb .omakedb.lock cfstream.install configure.om default-configure.om
+
+
+################################################################################
+# General Project Information
+PROJECT = cfstream
+VERSION = 1.0-dev
+LIB_NAME = $(PROJECT)
+LIB_DESCRIPTION = Core-friendly streams.
+API_DOC_TITLE = "CFStream API"
+
+DEPENDENCIES = core
+PACKAGES = $(DEPENDENCIES)
+
+LIB_MODULES[] =
+  $(removesuffix $(basename $(ls src/lib/*.ml)))
+
+LIB_SOURCES = $(add-wrapper src/lib, .ml, $(LIB_MODULES))
+
+################################################################################
+# Directory and File Names
+CONFIG_FILE = configure.om
+DEFAULT_PREFIX=_build/usr
+
+default-configure.om:
+  echo "Generating $@. Rename to $(CONFIG_FILE) to use." >> $(BUILD_SUMMARY)
+  echo "PREFIX=$(DEFAULT_PREFIX)" > $@
+
+if $(file-exists $(CONFIG_FILE))
+  include $(CONFIG_FILE)
+  export
+
+DefineCommandVars()
+
+if $(not $(defined PREFIX))
+  PREFIX = $(DEFAULT_PREFIX)
+  export
+
+if $(not $(defined BIN_DIR))
+  BIN_DIR = $(PREFIX)/bin
+  export
+
+if $(not $(defined DOC_DIR))
+  DOC_DIR = $(PREFIX)/doc
+  export
+
+print-paths:
+  echo "PREFIX = $(PREFIX)"
+  echo "BIN_DIR = $(BIN_DIR)"
+  echo "DOC_DIR = $(DOC_DIR)"
+
+
+################################################################################
+# Build Parameters
+USE_OCAMLFIND = true
+if $(not $(OCAMLFIND_EXISTS))
+   eprintln(Required package ocamlfind not found.)
+   exit 1
+
+NATIVE_ENABLED = $(OCAMLOPT_EXISTS)
+BYTE_ENABLED = $(OCAMLC_EXISTS)
+
+OCAMLFLAGS = -bin-annot -annot -warn-error P -thread
+OCAMLCFLAGS =
+OCAMLOPTFLAGS =
+OCAML_LINK_FLAGS +=
+OCAML_BYTE_LINK_FLAGS =
+OCAML_NATIVE_LINK_FLAGS =
+OCAMLFINDFLAGS =
+OCAMLPACKS[] = $(PACKAGES)
+
+.SUBDIRS: .
+  mkdir -p _build/src/lib
+  mkdir -p _build/src/doc
+  vmount(-l, src/, _build/src)
+
+  ################################################################################
+  # Library
+  .SUBDIRS: _build/src/lib
+
+    META:
+      echo "description = \"$(LIB_DESCRIPTION)\"" > $@
+      echo "version = \"$(VERSION)\"" >> $@
+      echo "archive(byte) = \"$(LIB_NAME).cma\"" >> $@
+      echo "archive(native) = \"$(LIB_NAME).cmxa\"" >> $@
+      echo "requires = \"$(DEPENDENCIES)\"" >> $@
+
+    lib: $(OCamlLibrary $(LIB_NAME), $(LIB_MODULES))
+
+    .DEFAULT: lib META
+
+    install_lib: $(LIB_NAME).cma $(LIB_NAME).cmxa META uninstall_lib
+      ocamlfind install $(LIB_NAME) META \
+        *.cm[iox] *.o $(LIB_NAME).cma $(LIB_NAME).cmxa *.a
+
+    uninstall_lib:
+      ocamlfind remove $(LIB_NAME)
+
+
+  ################################################################################
+  # API Documentation
+  .SUBDIRS: _build/src/doc
+    api/index.html: lib intro.txt
+      rm -rf api
+      mkdir api
+      ocamlfind ocamldoc \
+        $(OCAMLFINDFLAGS) \
+        -thread \
+        -package $(concat \,, $(PACKAGES)) \
+        -charset UTF-8 \
+        -d api \
+        -t $(API_DOC_TITLE) \
+        -keep-code \
+        -colorize-code \
+        -sort \
+        -html \
+        -intro intro.txt \
+        -I ../lib \
+        ../lib/*.ml ../lib/*.mli
+
+    doc: api/index.html
+
+  install_doc: doc
+    section
+      X = $(DOC_DIR)/$(PROJECT)
+      echo "Installing documentation in $(X)" >> $(BUILD_SUMMARY)
+      rm -rf $(X)
+      mkdir -p $(X)
+      cp -r _build/doc/api $(X)/
+
+
+################################################################################
+# OPAM Support
+OPAM_PKG_NAME=$(PROJECT)
+
+$(OPAM_PKG_NAME).install:
+  section
+    SUFFIXES[] = annot cmi cmo cmt cmx o
+    FILES[] =
+      $(foreach $(fun file => $(foreach $(fun suffix => $(file).$(suffix)), annot cmi cmo cmt cmx o)), $(LIB_MODULES))
+      $(foreach $(fun suffix => $(LIB_NAME).$(suffix)), a cma cmxa)
+    FOO = $(FILES) META
+    echo $"lib: [" > $@
+    foreach(file => ..., $(FOO))
+      echo "  "\"_build/src/lib/$(file)\" >> $@
+    echo $"]" >> $@
+    echo "" >> $@
+    echo $"bin: [" >> $@
+    echo "  "\"?_build/src/app/dircmp.run\" {\"dircmp\"} >> $@
+    echo "  "\"?_build/src/app/dircmp.opt\" {\"dircmp\"} >> $@
+    echo $"]" >> $@

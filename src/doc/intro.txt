@@ -1,0 +1,29 @@
+Streams represent a sequence of data items, which can be operated on
+one at a time. Thus, it is possible to operate on a large sequence of
+items without loading them into memory.
+
+This library extends the
+{{:http://caml.inria.fr/pub/docs/manual-ocaml/libref/Stream.html}standard
+library's Stream module} with several practical functions. CFStream
+stands for "Core-friendly Stream". The library is so named because the
+API follows the
+{{:https://ocaml.janestreet.com/ocaml-core/latest/doc/}Core standard
+library's} style, e.g. labeled arguments are used. It is also inspired
+by
+{{:http://ocaml-batteries-team.github.com/batteries-included/hdoc2/BatEnum.html}Batteries's
+[Enum] module}.
+
+The implementation is useful for beginners and simple scripts. Robust
+high-performance software should instead use
+{{:http://ocsigen.org/lwt/}Lwt} or
+{{:https://ocaml.janestreet.com/ocaml-core/latest/doc/async_core/index.html}Async}.
+
+Recommended usage is to do [open CFStream].
+
+{!modules:
+CFStream
+CFStream_stream
+CFStream_streamable
+}
+
+{!indexlist}
