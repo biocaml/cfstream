@@ -159,7 +159,7 @@ OCAMLPACKS[] = $(PACKAGES)
       echo "Installing documentation in $(X)" >> $(BUILD_SUMMARY)
       rm -rf $(X)
       mkdir -p $(X)
-      cp -r _build/doc/api $(X)/
+      cp -r _build/src/doc/api $(X)/
 
 
 ################################################################################
