@@ -1,4 +1,4 @@
-CFStream - Core-friendly extension of OCaml's Stream data structure
+CFStream - Core-friendly extension of OCaml's Stream data structure  
 [![Build Status](https://travis-ci.org/biocaml/cfstream.png?branch=master)](https://travis-ci.org/biocaml/cfstream)
 
 DESCRIPTION
