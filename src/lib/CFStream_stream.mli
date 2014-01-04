@@ -26,6 +26,11 @@ exception Error of string
     streams are expected to be of the same length. *)
 exception Expected_streams_of_equal_length
 
+(** Raised when an operation needs more elements from a stream than
+    available. *)
+exception Premature_end_of_input
+
+
 (** Return first element in given stream if any and remove it from the
     stream. *)
 val next: 'a t -> 'a option
@@ -281,6 +286,19 @@ val group : 'a t -> f:('a -> 'b) -> 'a t t
 val group_by : 'a t -> eq:('a -> 'a -> bool) -> 'a t t
 (** Same as [group] but with a comparison function instead of a
     mapping. *)
+
+val chunk2 : 'a t -> ('a * 'a) t
+(** Given a stream with items [x0, x1, x2, x3,...], the returned stream
+    will be pairs of items [(x0,x1), (x2,x3), ...].
+
+    @raise Premature_end_of_input if input stream has an odd number of
+    elements. *)
+
+val chunk3 : 'a t -> ('a * 'a * 'a) t
+(** Like [chunk2] but for 3-tuples. *)
+
+val chunk4 : 'a t -> ('a * 'a * 'a * 'a) t
+(** Like [chunk2] but for 4-tuples. *)
 
 val map : 'a t -> f:('a -> 'b) -> 'b t
 val mapi : 'a t -> f:(int -> 'a -> 'b) -> 'b t

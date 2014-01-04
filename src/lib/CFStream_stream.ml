@@ -16,6 +16,7 @@ let to_stream x = x
 let of_stream x = x
 
 exception Expected_streams_of_equal_length
+exception Premature_end_of_input
 
 let of_list l =
   let lr = ref l in
@@ -242,6 +243,36 @@ let group_aux xs map eq =
 let group xs ~f = group_aux xs f ( = )
 
 let group_by xs ~eq = group_aux xs ident eq
+
+let chunk2 xs =
+  from (fun _ -> match next xs with
+  | None -> None
+  | Some a -> (match next xs with
+    | None -> raise Premature_end_of_input
+    | Some b -> Some (a,b)
+  ) )
+
+let chunk3 xs =
+  from (fun _ -> match next xs with
+  | None -> None
+  | Some a -> (match next xs with
+    | None -> raise Premature_end_of_input
+    | Some b -> (match next xs with
+      | None -> raise Premature_end_of_input
+      | Some c -> Some (a,b,c)
+    )) )
+
+let chunk4 xs =
+  from (fun _ -> match next xs with
+  | None -> None
+  | Some a -> (match next xs with
+    | None -> raise Premature_end_of_input
+    | Some b -> (match next xs with
+      | None -> raise Premature_end_of_input
+      | Some c -> (match next xs with
+        | None -> raise Premature_end_of_input
+        | Some d -> Some (a,b,c,d)
+      ))) )
 
 let mapi xs ~f =
   let aux i = Option.map (next xs) ~f:(f i) in
