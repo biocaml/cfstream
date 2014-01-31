@@ -332,7 +332,7 @@ let concat xs =
   in
   from aux
 
-let concatmap l ~f =
+let concat_map l ~f =
   let rec find_next_non_empty_stream xs =
     (* As opposed to concat, we use next here to avoid infinite looping. *)
     match next xs with
