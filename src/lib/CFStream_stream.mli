@@ -306,6 +306,7 @@ val filter : 'a t -> f:('a -> bool) -> 'a t
 val filter_map : 'a t -> f:('a -> 'b option) -> 'b t
 val append : 'a t -> 'a t -> 'a t
 val concat : 'a t t -> 'a t
+val concatmap : 'a t -> f:('a -> 'b t) -> 'b t
 
 val combine : 'a t * 'b t -> ('a * 'b) t
 (** [combine] transforms a pair of streams into a stream of pairs of
