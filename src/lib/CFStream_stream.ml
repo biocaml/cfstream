@@ -336,24 +336,25 @@ let concat_map l ~f =
   let rec find_next_non_empty_stream xs =
     (* As opposed to concat, we use next here to avoid infinite looping. *)
     match next xs with
-      | Some x ->
-          let stream = f x in
-          if is_empty stream then
-            find_next_non_empty_stream xs
-          else Some stream
-      | None -> None
+    | Some x ->
+      let stream = f x in
+      if is_empty stream then
+        find_next_non_empty_stream xs
+      else
+        Some stream
+    | None -> None
   in
   let current = ref (empty ()) in
   let aux _ =
     match next !current with
-      | None -> (
-          match find_next_non_empty_stream l with
-            | None -> None
-            | Some stream ->
-                current := stream ;
-                next stream
-        )
-      | x -> x
+    | None -> (
+      match find_next_non_empty_stream l with
+      | None -> None
+      | Some stream ->
+        current := stream ;
+        next stream
+    )
+    | x -> x
   in
   from aux
 
