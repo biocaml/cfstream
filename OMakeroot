@@ -170,8 +170,8 @@ OCAMLFINDFLAGS =
         -colorize-code \
         -sort \
         -html \
-        -I ../lib \
-        ../lib/*.ml ../lib/*.mli
+        -I ../src/lib \
+        ../src/lib/*.ml ../src/lib/*.mli
 
     doc: api/index.html
 
