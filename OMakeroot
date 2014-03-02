@@ -1,53 +1,52 @@
 open build/Common
 open build/OCaml
 
-.PHONY: lib doc \
+.PHONY: lib test doc \
         install install_lib install_doc \
         uninstall uninstall_lib \
-        build-test test \
-        clean distclean
-
-################################################################################
-# Primary Commands
-install: install_lib
-uninstall: uninstall_lib
-
-clean:
-  rm -rf _build
-
-distclean: clean
-  rm -rf OMakeroot.omc .omakedb .omakedb.lock cfstream.install configure.om default-configure.om
-
+        clean distclean \
+        print_config
 
 ################################################################################
 # General Project Information
 PROJECT = cfstream
 VERSION = 1.1-dev
+if $(test -e .git)
+  GIT_COMMIT = $(shell git rev-parse HEAD)
+  export
+else
+  GIT_COMMIT =
+  export
+
 LIB_NAME = $(PROJECT)
 LIB_DESCRIPTION = Stream operations in the style of Core\'s API.
-API_DOC_TITLE = "CFStream API"
+LIB_MODULES[] =
+  CFStream_about
+  CFStream_streamable
+  CFStream_stream
+  CFStream
+LIB_PACKAGES = core
 
-DEPENDENCIES = core
-PACKAGES = $(DEPENDENCIES)
+TEST_NAME = $(PROJECT)-test
+TEST_MODULES[] = $(removesuffix $(basename $(ls src/test/test_*.ml)))
+TEST_PACKAGES = $(LIB_PACKAGES) oUnit
 
-LIB_MODULES[] = CFStream_streamable CFStream_stream CFStream
-
-LIB_SOURCES = $(add-wrapper src/lib, .ml, $(LIB_MODULES))
-
-TEST_APP = $(PROJECT)-test
-TEST_PACKAGES = oUnit
-TEST_MODULES[] = test_stream
-test: _build/src/test/$(TEST_APP)
-  $<
+.PHONY: foo
+foo:
+  echo $(LIB_MODULES)
 
 ################################################################################
 # Directory and File Names
 CONFIG_FILE = configure.om
 DEFAULT_PREFIX=_build/usr
 
-default-configure.om:
-  echo "Generating $@. Rename to $(CONFIG_FILE) to use." >> $(BUILD_SUMMARY)
-  echo "PREFIX=$(DEFAULT_PREFIX)" > $@
+$(CONFIG_FILE):
+  if $(not $(file-exists $(CONFIG_FILE)))
+    echo "Generating default $@. Change as desired."
+    echo "COMPILE_TEST = true" > $(CONFIG_FILE)
+    echo "PREFIX = $(DEFAULT_PREFIX)" >> $(CONFIG_FILE)
+  else
+    echo "$@ exists. Will not change."
 
 if $(file-exists $(CONFIG_FILE))
   include $(CONFIG_FILE)
@@ -67,7 +66,12 @@ if $(not $(defined DOC_DIR))
   DOC_DIR = $(PREFIX)/doc
   export
 
-print-paths:
+if $(not $(defined COMPILE_TEST))
+  COMPILE_TEST = true
+  export
+
+print_config:
+  echo "COMPILE_TEST: $(COMPILE_TEST)"
   echo "PREFIX = $(PREFIX)"
   echo "BIN_DIR = $(BIN_DIR)"
   echo "DOC_DIR = $(DOC_DIR)"
@@ -90,24 +94,36 @@ OCAML_LINK_FLAGS +=
 OCAML_BYTE_LINK_FLAGS =
 OCAML_NATIVE_LINK_FLAGS =
 OCAMLFINDFLAGS =
-OCAMLPACKS[] = $(PACKAGES)
 
 .SUBDIRS: .
   mkdir -p _build/src/lib
-  mkdir -p _build/src/doc
   mkdir -p _build/src/test
+  mkdir -p _build/doc
   vmount(-l, src/, _build/src)
 
-  ################################################################################
+  ##############################################################################
   # Library
   .SUBDIRS: _build/src/lib
+    OCAMLPACKS[] = $(LIB_PACKAGES)
+
+    CFStream_about.ml: :value: $(VERSION)
+      echo '(** General information about this library. *)' > $@
+      echo '' >> $@
+      echo '(** Version: ["$(VERSION)"] *)' >> $@
+      echo 'let version = "$(VERSION)"' >> $@
+      echo '' >> $@
+      echo '(** Git commit if known. *)' >> $@
+      if $(equal $(GIT_COMMIT), $(EMPTY))
+        echo 'let git_commit = None' >> $@
+      else
+        echo 'let git_commit = Some "$(GIT_COMMIT)"' >> $@
 
     META:
       echo "description = \"$(LIB_DESCRIPTION)\"" > $@
       echo "version = \"$(VERSION)\"" >> $@
       echo "archive(byte) = \"$(LIB_NAME).cma\"" >> $@
       echo "archive(native) = \"$(LIB_NAME).cmxa\"" >> $@
-      echo "requires = \"$(DEPENDENCIES)\"" >> $@
+      echo "requires = \"$(LIB_PACKAGES)\"" >> $@
 
     lib: $(OCamlLibrary $(LIB_NAME), $(LIB_MODULES))
 
@@ -118,32 +134,38 @@ OCAMLPACKS[] = $(PACKAGES)
         *.cm[iox] *.o $(LIB_NAME).cma $(LIB_NAME).cmxa *.a
 
     uninstall_lib:
-      ocamlfind remove $(LIB_NAME)
+      ocamlfind remove $(PROJECT)
 
 
-  ################################################################################
-  # Unit Tests
+  ##############################################################################
+  # Tests
   .SUBDIRS: _build/src/test
-     OCAML_LIBS = ../lib/$(LIB_NAME)
-     OCAMLINCLUDES += $(dir ../lib/)
-     OCAMLPACKS[] = $(PACKAGES) $(TEST_PACKAGES)
-     %.ml: ../lib/$(LIB_NAME).cma
-     build-test: $(OCamlProgram $(TEST_APP), $(TEST_MODULES))
+    OCAML_LIBS = ../lib/$(LIB_NAME)
+    OCAMLINCLUDES += $(dir ../lib/)
+    OCAMLPACKS[] = $(TEST_PACKAGES)
+
+    %.ml: ../lib/$(LIB_NAME).cma
+
+    test: $(OCamlProgram $(TEST_NAME), $(TEST_MODULES))
+
+    if $(COMPILE_TEST)
+      echo "Building test"
+      .DEFAULT: test
 
 
-  ################################################################################
-  # API Documentation
-  .SUBDIRS: _build/src/doc
+  ##############################################################################
+  # Documentation
+  .SUBDIRS: _build/doc
     api/index.html: lib
       rm -rf api
       mkdir api
       ocamlfind ocamldoc \
         $(OCAMLFINDFLAGS) \
         -thread \
-        -package $(concat \,, $(PACKAGES)) \
+        -package $(concat \,, $(LIB_PACKAGES)) \
         -charset UTF-8 \
         -d api \
-        -t $(API_DOC_TITLE) \
+        -t "CFStream $(VERSION)" \
         -keep-code \
         -colorize-code \
         -sort \
@@ -154,26 +176,19 @@ OCAMLPACKS[] = $(PACKAGES)
     doc: api/index.html
 
   install_doc: doc
-    section
-      X = $(DOC_DIR)/$(PROJECT)
-      echo "Installing documentation in $(X)" >> $(BUILD_SUMMARY)
-      rm -rf $(X)
-      mkdir -p $(X)
-      cp -r _build/src/doc/api $(X)/
+    echo "Installing documentation in $(DOC_DIR)"
+    rm -rf $(DOC_DIR)
+    mkdir -p $(DOC_DIR)
+    cp -r _build/doc/api $(DOC_DIR)
 
 
 ################################################################################
-# OPAM Support
-OPAM_PKG_NAME=$(PROJECT)
+# Primary Commands
+install: install_lib
+uninstall: uninstall_lib
 
-$(OPAM_PKG_NAME).install:
-  section
-    SUFFIXES[] = annot cmi cmo cmt cmx o
-    FILES[] =
-      $(foreach $(fun file => $(foreach $(fun suffix => $(file).$(suffix)), annot cmi cmo cmt cmx o)), $(LIB_MODULES))
-      $(foreach $(fun suffix => $(LIB_NAME).$(suffix)), a cma cmxa)
-    FOO = $(FILES) META
-    echo $"lib: [" > $@
-    foreach(file => ..., $(FOO))
-      echo "  "\"_build/src/lib/$(file)\" >> $@
-    echo $"]" >> $@
+clean:
+  rm -rf _build
+
+distclean: clean
+  rm -rf OMakeroot.omc .omakedb .omakedb.lock configure.omc
