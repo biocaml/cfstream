@@ -1,4 +1,4 @@
-open Core.Std
+open Core_kernel.Std
 open OUnit
 open CFStream_stream
 open CFStream_stream.Infix
@@ -18,7 +18,7 @@ let test_exists () =
 
 let test_group () =
   let f x = x mod 2 in
-  let groups = 
+  let groups =
     [ 1 ; 3 ; 4 ; 5 ; 4 ; 2 ; 9]
     |! of_list
     |! group ~f
@@ -29,7 +29,7 @@ let test_group () =
 
   (* now the same test but visiting the groups in the reverse order
      (triggers forcing of previous streams) *)
-  let groups = 
+  let groups =
     [ 1 ; 3 ; 4 ; 5 ; 4 ; 2 ; 9]
     |! of_list
     |! group ~f
@@ -37,7 +37,7 @@ let test_group () =
     |! List.rev_map ~f:to_list
     |! List.rev
   in
-  assert_equal 
+  assert_equal
     ~msg:"Find groups with same parity (reverse order)"
     groups [ [ 1 ; 3 ] ; [ 4 ] ; [ 5 ] ; [ 4 ; 2 ] ; [ 9 ] ]
 
@@ -49,7 +49,7 @@ let test_concat () =
     |! group ~f
     |! concat
     |! to_list
-  in 
+  in
   assert_equal
     ~msg:"Concat grouped enum is idempotent"
     l m
@@ -68,7 +68,7 @@ let test_uncombine () =
   assert_equal ~printer:int_list_printer ~msg:"Check first list"  (List.rev l1) [ 1 ; 3 ; 5 ; 7 ] ;
   assert_equal ~printer:int_list_printer ~msg:"Check second list" (List.rev l2) [ 2 ; 4 ; 6 ; 8 ]
 
-let test_partition () = 
+let test_partition () =
   let f x = x mod 2 = 0 in
   let l = List.init 100 ~f:(fun _ -> Random.int 10) in
   let r1 = Caml.List.partition f l in
@@ -76,7 +76,7 @@ let test_partition () =
    of_list l
     |! partition ~f
     |! (fun (a, b) -> (to_list a, to_list b))
-  in 
+  in
   assert_equal
     ~printer:int_list_tuple_printer
     ~msg:"Check stream partition against list partition"
@@ -87,19 +87,19 @@ let test_iter () =
   let c = ref [] in
   let f x = c := x :: !c in
   iter (Stream.of_list l) ~f ;
-  assert_equal 
+  assert_equal
     ~printer:int_list_printer
     ~msg:"Check list built with iter"
     l (List.rev !c)
 
 let test_take () =
-  assert_equal 
+  assert_equal
     ~printer:int_list_printer
     ~msg:"Check take"
     [1;2;3] (to_list (take (of_list [1;2;3;4;5]) 3)) ;
   let s = of_list [1;2;3;4;5] in
   ignore (next s) ;
-  assert_equal 
+  assert_equal
     ~printer:int_list_printer
     ~msg:"Check take after changing the stream count"
     [2;3;4] (to_list (take s 3))
@@ -170,7 +170,7 @@ let test_skip () =
     ~msg:"Check [skip]'ed lists (by hand and by [uniq]"
     [ 6;-1;-2;7;8 ]
     ([ -5 ; -5 ; -6 ;6;-1;-2;7;8 ] |! of_list |! skip_while ~f:(( > ) 0) |! to_list)
-  
+
 
 let tests = "Stream" >::: [
   "Exists" >:: test_exists;

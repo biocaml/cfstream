@@ -1,5 +1,9 @@
 CFStream Release Notes
 
+cfstream-1.1.2 2014-06-16
+-------------------------
+* Reduced deps to core_kernel instead of core.
+
 cfstream-1.1.1 2014-03-02
 -------------------------
 * Fix doc build bug.

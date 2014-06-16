@@ -17,7 +17,7 @@ opam --git-version
 # install OCaml packages
 opam init 
 eval `opam config env`
-opam install ocamlfind omake core
+opam install ocamlfind omake core_kernel
 
 # test this package
 omake

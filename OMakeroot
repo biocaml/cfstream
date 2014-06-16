@@ -25,7 +25,7 @@ LIB_MODULES[] =
   CFStream_streamable
   CFStream_stream
   CFStream
-LIB_PACKAGES = core
+LIB_PACKAGES = core_kernel
 
 TEST_NAME = $(PROJECT)-test
 TEST_MODULES[] = $(removesuffix $(basename $(ls src/test/test_*.ml)))
