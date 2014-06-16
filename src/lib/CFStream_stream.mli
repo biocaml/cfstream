@@ -3,7 +3,7 @@
     In general, functions that return a stream return a "fresh"
     stream, meaning that their count is set to 0.
 *)
-open Core.Std
+open Core_kernel.Std
 
 (** Type of streams holding values of type ['a]. *)
 type 'a t = 'a Stream.t
@@ -362,7 +362,7 @@ val of_string : string -> char t
 (** Convert exception-less stream to exception-ful stream. Resulting
     stream raises exception at first error seen. *)
 val result_to_exn :
-  ('output, 'error) Core.Std.Result.t t ->
+  ('output, 'error) Result.t t ->
   error_to_exn:('error -> exn) ->
   'output t
 
