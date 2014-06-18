@@ -156,7 +156,8 @@ let rec drop_whilei xs ~f =
 let drop_while xs ~f = drop_whilei xs ~f:(const f)
 
 let drop xs ~n =
-  drop_whilei xs ~f:(fun j _ -> j < n)
+  let i = ref n in
+  drop_whilei xs ~f:(fun _ _ -> if !i > 0 then (decr i ; true) else false)
 
 let skip_whilei xs ~f =
   drop_whilei xs ~f ;
