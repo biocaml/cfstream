@@ -1,9 +1,9 @@
 CFStream Release Notes
 
-cfstream-1.1.2 2014-06-16
+cfstream-1.1.2 2014-07-02
 -------------------------
-* bugfix on `drop` and `skip`
-* Reduced deps to core_kernel instead of core.
+* #3: Fix bug in `drop`.
+* Reduced dependency to core_kernel instead of core.
 
 cfstream-1.1.1 2014-03-02
 -------------------------
