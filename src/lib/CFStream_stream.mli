@@ -256,11 +256,8 @@ val drop : 'a t -> n:int -> unit
     and stops when [f] evals to false on the head element. *)
 val drop_while : 'a t -> f:('a -> bool) -> unit
 
-(** Similar to [drop] but returns a fresh stream obtained after
-    discarding the [n] first elements. Being a fresh stream, the count
-    of the returned stream starts from 0. Beware though, that the
-    input and output streams are consuminmg the same resource, so
-    consuming one modify the other. *)
+(** Similar to [drop] but returns the stream in input (useful in
+    chained composition). *)
 val skip : 'a t -> n:int -> 'a t
 
 (** Similar to [skip]: [skip_while xs ~f] removes elements from [xs]
