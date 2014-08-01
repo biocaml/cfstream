@@ -161,13 +161,13 @@ let drop xs ~n =
 
 let skip_whilei xs ~f =
   drop_whilei xs ~f ;
-  from (fun _ -> next xs)
+  xs
 
 let skip_while xs ~f = skip_whilei xs ~f:(const f)
 
 let skip xs ~n =
   drop xs ~n ;
-  from (fun _ -> next xs)
+  xs
 
 let span xs ~f =
     (*Two possibilities: either the tail has been read
