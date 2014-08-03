@@ -1,5 +1,7 @@
 CFStream Release Notes
 
+* #4: skip now returns the stream in input instead of fresh one
+
 cfstream-1.1.2 2014-07-02
 -------------------------
 * #3: Fix bug in `drop`.
