@@ -22,6 +22,7 @@ LIB_NAME = $(PROJECT)
 LIB_DESCRIPTION = Stream operations in the style of Core\'s API.
 LIB_MODULES[] =
   CFStream_about
+  CFStream_result_stream
   CFStream_streamable
   CFStream_stream
   CFStream
