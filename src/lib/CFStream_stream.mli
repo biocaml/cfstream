@@ -363,6 +363,62 @@ val result_to_exn :
   error_to_exn:('error -> exn) ->
   'output t
 
+(** Higher-order functions for streams of results
+
+    The functions in this module can be used to iterate on a stream of
+    results with a function that only considers the non-error
+    case. The iterated function thus doesn't need to do the pattern
+    match on each [Result] value.
+
+    For each kind of iteration, two versions are proposed. One for
+    total functions (that is, functions that cannot fail), the other
+    for partial functions (they are assumed to return a [Result] in
+    this case).
+*)
+module Result : sig
+  type ('a, 'e) t = ('a, 'e) Result.t Stream.t
+
+  val to_exn : ('a, 'e) t -> error_to_exn:('e -> exn) -> 'a Stream.t
+
+  val map : ('a, 'e) t -> f:('a -> ('b, 'e) Result.t) -> ('b,'e) t
+  (** [map' rs ~f] maps [Ok] results with a partial function [f] *)
+
+  val map' : ('a, 'e) t -> f:('a -> 'b) -> ('b, 'e) t
+  (** [map rs ~f] maps [Ok] results with a total function [f] *)
+
+  val fold : ('a, 'e) t -> init:'b -> f:('b -> 'a -> ('b, 'e) Result.t) -> ('b, 'e) Result.t
+  (** [fold rs ~init ~f] computes a value by iterating [f] on each
+      [Ok] element of [rs] starting from [init]. The computation stops
+      with an [Error] case as soon as one is met on the stream, or
+      when [f] returns one. *)
+
+  val fold' : ('a, 'e) t -> init:'b -> f:('b -> 'a -> 'b) -> ('b, 'e) Result.t
+  (** Same as [fold], but for total functions. *)
+end
+
+(** Specialisation of {! CFStream_stream.Result } for ['a
+    Or_error.t] *)
+module Or_error : sig
+  type 'a t = 'a Or_error.t Stream.t
+
+  val to_exn : 'a t -> error_to_exn:(Error.t -> exn) -> 'a Stream.t
+
+  val map : 'a t -> f:('a -> 'b Or_error.t) -> 'b t
+  (** [map' rs ~f] maps [Ok] results with a partial function [f] *)
+
+  val map' : 'a t -> f:('a -> 'b) -> 'b t
+  (** [map rs ~f] maps [Ok] results with a total function [f] *)
+
+  val fold : 'a t -> init:'b -> f:('b -> 'a -> 'b Or_error.t) -> 'b Or_error.t
+  (** [fold rs ~init ~f] computes a value by iterating [f] on each
+      [Ok] element of [rs] starting from [init]. The computation stops
+      with an [Error] case as soon as one is met on the stream, or
+      when [f] returns one. *)
+
+  val fold' : 'a t -> init:'b -> f:('b -> 'a -> 'b) -> 'b Or_error.t
+  (** Same as [fold], but for total functions. *)
+end
+
 module Infix : sig
   val ( -- ) : int -> int -> int t
     (** As [range], without the label.
