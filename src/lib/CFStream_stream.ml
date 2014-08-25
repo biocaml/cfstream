@@ -566,6 +566,8 @@ module Result = struct
   let stream_map = map
   let stream_fold = fold
 
+  open Result
+
   type ('a, 'b) t = ('a, 'b) Result.t Stream.t
 
   module Impl = struct
