@@ -283,6 +283,23 @@ let map xs ~f =
   let aux _ = Option.map (next xs) ~f in
   from aux
 
+let mapi2_exn xs ys ~f =
+  let aux i =
+    match peek xs, peek ys with
+    | Some x, Some y -> (
+        let r = f i x y in
+        junk xs ;
+        junk ys ;
+        Some r
+      )
+    | None, None -> None
+    | _, _ -> raise Expected_streams_of_equal_length
+  in
+  from aux
+
+let map2_exn xs ys ~f = mapi2_exn xs ys ~f:(fun _ -> f)
+
+
 let filter xs ~f =
   let rec aux i =
     match next xs with
