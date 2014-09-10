@@ -299,6 +299,8 @@ val chunk4 : 'a t -> ('a * 'a * 'a * 'a) t
 
 val map : 'a t -> f:('a -> 'b) -> 'b t
 val mapi : 'a t -> f:(int -> 'a -> 'b) -> 'b t
+val map2_exn : 'a t -> 'b t -> f:('a -> 'b -> 'c) -> 'c t
+val mapi2_exn : 'a t -> 'b t -> f:(int -> 'a -> 'b -> 'c) -> 'c t
 val filter : 'a t -> f:('a -> bool) -> 'a t
 val filter_map : 'a t -> f:('a -> 'b option) -> 'b t
 val append : 'a t -> 'a t -> 'a t
