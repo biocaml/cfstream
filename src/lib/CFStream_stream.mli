@@ -388,6 +388,13 @@ module Result : sig
   val map' : ('a, 'e) t -> f:('a -> 'b) -> ('b, 'e) t
   (** [map rs ~f] maps [Ok] results with a total function [f] *)
 
+  val map2_exn : ('a, 'e) t -> ('b, 'e) t -> f:('a -> 'b -> ('c, 'e) Result.t) -> ('c,'e) t
+  (** Generalization of [map] with two streams of results. If the two
+      streams fail simultaneously, one of the two errors is propagated. *)
+
+  val map2_exn' : ('a, 'e) t -> ('b, 'e) t -> f:('a -> 'b -> 'c) -> ('c,'e) t
+  (** Analoguous of [map2_exn] for total functions *)
+
   val fold : ('a, 'e) t -> init:'b -> f:('b -> 'a -> ('b, 'e) Result.t) -> ('b, 'e) Result.t
   (** [fold rs ~init ~f] computes a value by iterating [f] on each
       [Ok] element of [rs] starting from [init]. The computation stops
@@ -410,6 +417,13 @@ module Or_error : sig
 
   val map' : 'a t -> f:('a -> 'b) -> 'b t
   (** [map rs ~f] maps [Ok] results with a total function [f] *)
+
+  val map2_exn : 'a t -> 'b t -> f:('a -> 'b -> 'c Or_error.t) -> 'c t
+  (** Generalization of [map] with two streams of results. If the two
+      streams fail simultaneously, one of the two errors is propagated. *)
+
+  val map2_exn' : 'a t -> 'b t -> f:('a -> 'b -> 'c) -> 'c t
+  (** Analoguous of [map2_exn] for total functions *)
 
   val fold : 'a t -> init:'b -> f:('b -> 'a -> 'b Or_error.t) -> 'b Or_error.t
   (** [fold rs ~init ~f] computes a value by iterating [f] on each
