@@ -581,6 +581,7 @@ end
 
 module Result = struct
   let stream_map = map
+  let stream_map2_exn = map2_exn
   let stream_fold = fold
 
   type ('a, 'b) t = ('a, 'b) Result.t Stream.t
@@ -601,6 +602,22 @@ module Result = struct
         | Error _ as e -> e
       in
       stream_map rs ~f
+
+    let map2_exn xs ys ~f =
+      let f x y = match x, y with
+        | Ok x, Ok y -> f x y
+        | Error _ as ex, _ -> ex
+        | _, (Error _ as ey) -> ey
+      in
+      stream_map2_exn xs ys f
+
+    let map2_exn' xs ys ~f =
+      let f x y = match x, y with
+        | Ok x, Ok y -> Ok (f x y)
+        | Error _ as ex, _ -> ex
+        | _, (Error _ as ey) -> ey
+      in
+      stream_map2_exn xs ys f
 
     let fold' (type e) rs ~init ~f =
       let module M = struct exception E of e end in
