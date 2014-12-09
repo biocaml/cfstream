@@ -587,6 +587,17 @@ module Result = struct
   type ('a, 'b) t = ('a, 'b) Result.t Stream.t
 
   module Impl = struct
+
+    let all_gen (type e) g (xs : ('a, e) t) ~f =
+      let module M = struct exception E of e end in
+      let error_to_exn e = M.E e in
+      try g (f (result_to_exn xs ~error_to_exn))
+      with M.E e -> Result.Error e
+
+    let all xs ~f = all_gen ident xs ~f
+
+    let all' xs ~f = all_gen (fun x -> Ok x) xs ~f
+
     let to_exn = result_to_exn
 
     let map' rs ~f =

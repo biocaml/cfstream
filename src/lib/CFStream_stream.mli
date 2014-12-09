@@ -380,6 +380,10 @@ val result_to_exn :
 module Result : sig
   type ('a, 'e) t = ('a, 'e) Result.t Stream.t
 
+  val all : ('a, 'e) t -> f:('a Stream.t -> ('b, 'e) Result.t) -> ('b, 'e) Result.t
+
+  val all' : ('a, 'e) t -> f:('a Stream.t -> 'b) -> ('b, 'e) Result.t
+
   val to_exn : ('a, 'e) t -> error_to_exn:('e -> exn) -> 'a Stream.t
 
   val map : ('a, 'e) t -> f:('a -> ('b, 'e) Result.t) -> ('b,'e) t
@@ -409,6 +413,10 @@ end
     Or_error.t] *)
 module Or_error : sig
   type 'a t = 'a Or_error.t Stream.t
+
+  val all : 'a t -> f:('a Stream.t -> 'b Or_error.t) -> 'b Or_error.t
+
+  val all' : 'a t -> f:('a Stream.t -> 'b) -> 'b Or_error.t
 
   val to_exn : 'a t -> error_to_exn:(Error.t -> exn) -> 'a Stream.t
 
