@@ -10,7 +10,7 @@ open build/OCaml
 ################################################################################
 # General Project Information
 PROJECT = cfstream
-VERSION = 1.2-dev
+VERSION = 1.2.0
 if $(test -e .git)
   GIT_COMMIT = $(shell git rev-parse HEAD)
   export
