@@ -20,10 +20,10 @@ let test_group () =
   let f x = x mod 2 in
   let groups =
     [ 1 ; 3 ; 4 ; 5 ; 4 ; 2 ; 9]
-    |! of_list
-    |! group ~f
-    |! map ~f:(to_list)
-    |! to_list
+    |> of_list
+    |> group ~f
+    |> map ~f:(to_list)
+    |> to_list
   in
   assert_equal ~msg:"Find groups with same parity" groups [ [ 1 ; 3 ] ; [ 4 ] ; [ 5 ] ; [ 4 ; 2 ] ; [ 9 ] ] ;
 
@@ -31,11 +31,11 @@ let test_group () =
      (triggers forcing of previous streams) *)
   let groups =
     [ 1 ; 3 ; 4 ; 5 ; 4 ; 2 ; 9]
-    |! of_list
-    |! group ~f
-    |! to_list
-    |! List.rev_map ~f:to_list
-    |! List.rev
+    |> of_list
+    |> group ~f
+    |> to_list
+    |> List.rev_map ~f:to_list
+    |> List.rev
   in
   assert_equal
     ~msg:"Find groups with same parity (reverse order)"
@@ -46,9 +46,9 @@ let test_concat () =
   let l = List.init 100 ~f:(fun _ -> Random.int 10) in
   let m =
     of_list l
-    |! group ~f
-    |! concat
-    |! to_list
+    |> group ~f
+    |> concat
+    |> to_list
   in
   assert_equal
     ~msg:"Concat grouped enum is idempotent"
@@ -56,7 +56,7 @@ let test_concat () =
 
 let test_uncombine () =
   let l = [ 1,2; 3,4; 5,6; 7,8 ] in
-  let s1, s2 = of_list l |! uncombine in
+  let s1, s2 = of_list l |> uncombine in
   let l2 = next_exn s2 :: [] in
   let l2 = next_exn s2 :: l2 in
   let l1 = next_exn s1 :: [] in
@@ -74,8 +74,8 @@ let test_partition () =
   let r1 = Caml.List.partition f l in
   let r2 =
    of_list l
-    |! partition ~f
-    |! (fun (a, b) -> (to_list a, to_list b))
+    |> partition ~f
+    |> (fun (a, b) -> (to_list a, to_list b))
   in
   assert_equal
     ~printer:int_list_tuple_printer
@@ -121,13 +121,13 @@ let test_range () =
   assert_equal
     ~printer:string_of_int
     ~msg:"Unbounded range stream should have more than 10 elements"
-    10 (range 1 |! take ~n:10 |! to_list |! List.length)
+    10 (range 1 |> take ~n:10 |> to_list |> List.length)
 
 
 let test_scan () =
   let factorials =
     scan (1 -- 10) ~f:( * )
-    |! to_list
+    |> to_list
   in
   assert_equal
     ~printer:int_list_printer
@@ -136,14 +136,14 @@ let test_scan () =
 
 let test_merge () =
   let rnd_list () =
-    List.(init 20 ~f:(fun _ -> Random.int 1000) |! sort ~cmp:Pervasives.compare)
+    List.(init 20 ~f:(fun _ -> Random.int 1000) |> sort ~cmp:Pervasives.compare)
   in
   let f _ =
     let left = rnd_list () and right = rnd_list () in
     let gold = List.sort ~cmp:Pervasives.compare (left @ right)
     and merged =
       merge (of_list left) (of_list right) ~cmp:Pervasives.compare
-      |! to_list
+      |> to_list
     in
     assert_equal
       ~printer:int_list_printer
@@ -157,19 +157,19 @@ let test_uniq () =
     ~printer:int_list_printer
     ~msg:"Check uniq'ed lists (by hand and by [uniq]"
     [ 5;6;3;2;6;7;8 ]
-    ([ 5 ; 5 ; 6 ; 3 ; 3; 3 ; 2; 6; 7; 8; 8; 8] |! of_list |! uniq |! to_list)
+    ([ 5 ; 5 ; 6 ; 3 ; 3; 3 ; 2; 6; 7; 8; 8; 8] |> of_list |> uniq |> to_list)
 
 let test_skip () =
   assert_equal
     ~printer:int_list_printer
     ~msg:"Check [skip]'ed lists (by hand and by [uniq]"
     [ 6;-1;-2;7;8 ]
-    ([ -5 ; -5 ; -6 ;6;-1;-2;7;8 ] |! of_list |! skip ~n:3 |! to_list) ;
+    ([ -5 ; -5 ; -6 ;6;-1;-2;7;8 ] |> of_list |> skip ~n:3 |> to_list) ;
   assert_equal
     ~printer:int_list_printer
     ~msg:"Check [skip]'ed lists (by hand and by [uniq]"
     [ 6;-1;-2;7;8 ]
-    ([ -5 ; -5 ; -6 ;6;-1;-2;7;8 ] |! of_list |! skip_while ~f:(( > ) 0) |! to_list)
+    ([ -5 ; -5 ; -6 ;6;-1;-2;7;8 ] |> of_list |> skip_while ~f:(( > ) 0) |> to_list)
 
 
 let tests = "Stream" >::: [
