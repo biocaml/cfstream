@@ -58,7 +58,7 @@ let rec find_map xs ~f =
   match next xs with
   | Some x -> (
     match f x with
-    | Some x as y -> y
+    | Some _ as y -> y
     | None -> find_map xs ~f
   )
   | None -> None
@@ -493,7 +493,7 @@ let init n ~f =
     from aux
   )
 
-let singleton x = init 1 (const x)
+let singleton x = init 1 ~f:(const x)
 
 let to_list t =
   List.rev (fold ~init:[] ~f:(fun l b -> b::l) t)
@@ -518,10 +518,10 @@ let unfold init ~f = unfoldi init ~f:(const f)
 
 let range ?until n =
   let stop = Option.value_map until ~default:(fun _ -> false) ~f:( < ) in
-  unfold n (fun i -> if stop i then None else Some (i, i + 1))
+  unfold n ~f:(fun i -> if stop i then None else Some (i, i + 1))
 
 let of_lazy s =
-  let next i = next (Lazy.force s) in
+  let next _ = next (Lazy.force s) in
   from next
 
 (* Default buffer_size set to UNIX_BUFFER_SIZE in OCaml's
@@ -547,7 +547,7 @@ let to_array strm =
 let of_hashtbl t = of_list (Hashtbl.to_alist t)
 let to_hashtbl xs =
   let t = Hashtbl.Poly.create () in
-  iter xs ~f:(fun (key,data) -> Hashtbl.Poly.replace t ~key ~data);
+  iter xs ~f:(fun (key,data) -> Hashtbl.Poly.set t ~key ~data);
   t
 
 let of_map t = of_list (Map.to_alist t)
@@ -620,7 +620,7 @@ module Result = struct
         | Error _ as ex, _ -> ex
         | _, (Error _ as ey) -> ey
       in
-      stream_map2_exn xs ys f
+      stream_map2_exn xs ys ~f
 
     let map2_exn' xs ys ~f =
       let f x y = match x, y with
@@ -628,7 +628,7 @@ module Result = struct
         | Error _ as ex, _ -> ex
         | _, (Error _ as ey) -> ey
       in
-      stream_map2_exn xs ys f
+      stream_map2_exn xs ys ~f
 
     let fold' (type e) rs ~init ~f =
       let module M = struct exception E of e end in

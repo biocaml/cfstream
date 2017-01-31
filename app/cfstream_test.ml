@@ -3,7 +3,7 @@ open OUnit
 open CFStream_stream
 open CFStream_stream.Infix
 
-let int_list_printer il = String.concat ~sep:"; " (List.map il (sprintf "%d"))
+let int_list_printer il = String.concat ~sep:"; " (List.map il ~f:(sprintf "%d"))
 let int_list_tuple_printer (al, bl) =
   sprintf "%s, %s" (int_list_printer al) (int_list_printer bl)
 
@@ -96,13 +96,13 @@ let test_take () =
   assert_equal
     ~printer:int_list_printer
     ~msg:"Check take"
-    [1;2;3] (to_list (take (of_list [1;2;3;4;5]) 3)) ;
+    [1;2;3] (to_list (take (of_list [1;2;3;4;5]) ~n:3)) ;
   let s = of_list [1;2;3;4;5] in
   ignore (next s) ;
   assert_equal
     ~printer:int_list_printer
     ~msg:"Check take after changing the stream count"
-    [2;3;4] (to_list (take s 3))
+    [2;3;4] (to_list (take s ~n:3))
 
 
 let test_range () =
@@ -136,7 +136,7 @@ let test_scan () =
 
 let test_merge () =
   let rnd_list () =
-    List.(init 20 (fun _ -> Random.int 1000) |! sort ~cmp:Pervasives.compare)
+    List.(init 20 ~f:(fun _ -> Random.int 1000) |! sort ~cmp:Pervasives.compare)
   in
   let f _ =
     let left = rnd_list () and right = rnd_list () in
@@ -150,7 +150,7 @@ let test_merge () =
       ~msg:"Check merged sorted lists equals sorted concatenated lists"
       gold merged
   in
-  ignore (Array.init 10 f)
+  ignore (Array.init 10 ~f)
 
 let test_uniq () =
   assert_equal
