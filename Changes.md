@@ -1,5 +1,9 @@
 CFStream Release Notes
 
+X.Y.Z 201X-XX-XX
+----------------
+* #10: Build system uses solvuu-build instead of OMake.
+
 1.2.0 2015-04-25
 ----------------
 * Add `map2` and `all` functions. 
