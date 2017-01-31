@@ -8,14 +8,14 @@ let version = "dev"
 let lib : Project.item =
   Project.lib project_name
     ~pkg:project_name
-    ~dir:"src/lib"
+    ~dir:"lib"
     ~style:`Basic
     ~findlib_deps:["core_kernel"]
     ~ml_files:(`Add ["CFStream_about.ml"])
 
 let test : Project.item =
   Project.app "cfstream-test"
-    ~file:"src/test/test_stream.ml"
+    ~file:"app/cfstream_test.ml"
     ~findlib_deps:["oUnit"]
     ~internal_deps:[lib]
 
