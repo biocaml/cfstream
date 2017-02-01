@@ -1,6 +1,6 @@
 CFStream Release Notes
 
-X.Y.Z 201X-XX-XX
+1.2.1 2017-02-01
 ----------------
 * #10: Build system uses solvuu-build instead of OMake.
 
