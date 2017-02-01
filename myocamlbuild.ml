@@ -3,7 +3,7 @@ open Solvuu_build.Std
 open Solvuu_build.Util
 
 let project_name = "cfstream"
-let version = "dev"
+let version = "1.2.1"
 
 let lib : Project.item =
   Project.lib project_name
