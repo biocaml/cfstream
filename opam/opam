@@ -1,6 +1,4 @@
 opam-version: "1.2"
-name: "cfstream"
-version: "dev"
 homepage: "https://github.com/biocaml/cfstream"
 dev-repo: "https://github.com/biocaml/cfstream.git"
 bug-reports: "https://github.com/biocaml/cfstream/issues"
