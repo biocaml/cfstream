@@ -7,7 +7,7 @@ let version = "dev"
 
 let lib : Project.item =
   Project.lib project_name
-    ~pkg:project_name
+    ~install:(`Findlib project_name)
     ~dir:"lib"
     ~style:`Basic
     ~findlib_deps:["core_kernel"]
