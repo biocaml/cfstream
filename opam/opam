@@ -19,7 +19,7 @@ build: [
 
 depends: [
   "ocamlfind" {build}
-  "solvuu-build" {build & >= "0.1.0"}
+  "solvuu-build" {build & >= "0.3.0"}
   "core_kernel"
 ]
 
