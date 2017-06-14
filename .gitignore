@@ -1,9 +1,6 @@
 /_build
-/cfstream.install
-/.merlin
-/.ocamlinit
-/*.byte
-/*.native
-/tmp/
+/*.install
+.merlin
+/tmp
 *~
 .DS_Store

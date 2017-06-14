@@ -72,11 +72,11 @@ val from : (int -> 'a option) -> 'a t
     channel. WARNING: Semantics unclear if the channel is closed
     before the stream reads all of its input. For example, the stream
     appears to return values although the channel has been closed. *)
-val of_channel : in_channel -> char t
+val of_channel : In_channel.t -> char t
 
 (** Return a stream of strings from the input. Each string has length
     at most [buffer_size]. *)
-val strings_of_channel : ?buffer_size:int -> in_channel -> string t
+val strings_of_channel : ?buffer_size:int -> In_channel.t -> string t
 
 (** [range p until:q] creates a stream of integers [[p, p+1, ..., q]].
     If [until] is omitted, the enumeration is not bounded. Behaviour

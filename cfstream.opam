@@ -11,16 +11,13 @@ authors: [
 ]
 
 build: [
-  [make "byte"]
-  [make "native"]
-  [make "_build/META"]
-  [make "%{name}%.install"]
+  ["jbuilder" "build" "-p" name "-j" jobs]
 ]
 
 depends: [
-  "ocamlfind" {build}
-  "solvuu-build" {build & >= "0.3.0"}
-  "core_kernel"
+  "jbuilder" {build}
+  "core_kernel" {>= "v0.9.0"}
+  "ounit"
 ]
 
 available: [

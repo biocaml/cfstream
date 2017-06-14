@@ -1,7 +1,7 @@
 open Core_kernel.Std
 open OUnit
-open CFStream_stream
-open CFStream_stream.Infix
+open CFStream.Stream
+open CFStream.Stream.Infix
 
 let int_list_printer il = String.concat ~sep:"; " (List.map il ~f:(sprintf "%d"))
 let int_list_tuple_printer (al, bl) =
