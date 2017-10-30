@@ -1,5 +1,10 @@
 CFStream Release Notes
 
+1.2.3 2017-10-30
+----------------
+* Use jbuilder for build system.
+* Require core_kernel >= v0.9.0.
+
 1.2.2 2017-03-14
 ----------------
 * Minor release due to backwards incompatible change in latest
