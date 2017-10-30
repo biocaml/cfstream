@@ -1,8 +1,7 @@
 .PHONY: all
 all:
-	jbuilder build @install
+	jbuilder build @install --dev
 
 .PHONY: clean
 clean:
-	rm -rf _build
-	rm -f cfstream.install lib/.merlin app/.merlin
+	jbuilder clean
