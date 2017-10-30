@@ -1,0 +1,6 @@
+(jbuild_version 1)
+
+(alias
+ ((name    runtest)
+  (deps    (app/cfstream_test.exe))
+  (action  (run ${<}))))

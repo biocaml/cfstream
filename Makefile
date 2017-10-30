@@ -1,6 +1,9 @@
-.PHONY: all
+.PHONY: all test
 all:
 	jbuilder build @install
+
+test:
+	jbuilder runtest
 
 .PHONY: clean
 clean:
