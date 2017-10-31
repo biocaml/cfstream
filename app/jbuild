@@ -1,9 +1,12 @@
 (jbuild_version 1)
 
+(alias
+ ((name    runtest)
+  (deps    (cfstream_test.exe))
+  (action  (run ${<}))))
+
 (executable (
   (name cfstream_test)
-  (public_name cfstream-test)
   (libraries (cfstream oUnit))
-  (package cfstream)
   (modules cfstream_test)
 ))
