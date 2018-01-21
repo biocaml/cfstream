@@ -528,11 +528,11 @@ let of_lazy s =
    otherlibs/unix/unixsupport.h, but unsure if this is a good
    choice. *)
 let strings_of_channel ?(buffer_size=65536) inp =
-  let buf = String.create buffer_size in
+  let buf = Bytes.create buffer_size in
   from (fun _ ->
     match In_channel.input inp ~buf ~pos:0 ~len:buffer_size with
     | 0 -> None
-    | len -> Some (String.sub buf ~pos:0 ~len)
+    | len -> Some (Bytes.To_string.sub buf ~pos:0 ~len)
   )
 
 let of_array a =
