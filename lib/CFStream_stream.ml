@@ -552,7 +552,7 @@ let to_hashtbl xs =
 
 let of_map t = of_list (Map.to_alist t)
 let to_map xs =
-  fold xs ~init:Map.Poly.empty ~f:(fun accu (key,data) -> Map.Poly.add accu ~key ~data)
+  fold xs ~init:Map.Poly.empty ~f:(fun accu (key,data) -> Map.Poly.set accu ~key ~data)
 
 let of_set t = of_list (Set.to_list t)
 let to_set xs =
