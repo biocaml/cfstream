@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 
 include Stream
 let next_exn = next
@@ -67,7 +67,7 @@ let find xs ~f = find_map xs ~f:(fun x -> if f x then Some x else None)
 
 let find_exn xs ~f = match find xs ~f with
 | Some x -> x
-| None -> raise Not_found
+| None -> raise Caml.Not_found
 
 let exists xs ~f = match find xs ~f with
 | Some _ -> true
@@ -528,7 +528,7 @@ let of_lazy s =
    otherlibs/unix/unixsupport.h, but unsure if this is a good
    choice. *)
 let strings_of_channel ?(buffer_size=65536) inp =
-  let buf = String.create buffer_size in
+  let buf = Bytes.create buffer_size in
   from (fun _ ->
     match In_channel.input inp ~buf ~pos:0 ~len:buffer_size with
     | 0 -> None
@@ -552,7 +552,7 @@ let to_hashtbl xs =
 
 let of_map t = of_list (Map.to_alist t)
 let to_map xs =
-  fold xs ~init:Map.Poly.empty ~f:(fun accu (key,data) -> Map.Poly.add accu ~key ~data)
+  fold xs ~init:Map.Poly.empty ~f:(fun accu (key,data) -> Map.Poly.add_exn accu ~key ~data)
 
 let of_set t = of_list (Set.to_list t)
 let to_set xs =
