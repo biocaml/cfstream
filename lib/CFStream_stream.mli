@@ -3,7 +3,7 @@
     In general, functions that return a stream return a "fresh"
     stream, meaning that their count is set to 0.
 *)
-open Core_kernel.Std
+open Core_kernel
 
 (** Type of streams holding values of type ['a]. *)
 type 'a t = 'a Stream.t
