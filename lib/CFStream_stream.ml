@@ -532,7 +532,7 @@ let strings_of_channel ?(buffer_size=65536) inp =
   from (fun _ ->
     match In_channel.input inp ~buf ~pos:0 ~len:buffer_size with
     | 0 -> None
-    | len -> Some (Caml.Bytes.sub_string buf 0 len)
+    | len -> Some (Bytes.To_string.sub buf ~pos:0 ~len)
   )
 
 let of_array a =
