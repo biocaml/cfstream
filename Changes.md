@@ -1,5 +1,10 @@
 CFStream Release Notes
 
+1.3.0 2018-04-11
+----------------
+* Require ocaml >= 4.06.0.
+* Require core_kernel >= v0.11.0.
+
 1.2.3 2017-10-30
 ----------------
 * Use jbuilder for build system.
