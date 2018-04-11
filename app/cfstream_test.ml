@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 open OUnit
 open CFStream.Stream
 open CFStream.Stream.Infix
@@ -136,11 +136,11 @@ let test_scan () =
 
 let test_merge () =
   let rnd_list () =
-    List.(init 20 ~f:(fun _ -> Random.int 1000) |> sort ~cmp:Pervasives.compare)
+    List.(init 20 ~f:(fun _ -> Random.int 1000) |> sort ~compare:Pervasives.compare)
   in
   let f _ =
     let left = rnd_list () and right = rnd_list () in
-    let gold = List.sort ~cmp:Pervasives.compare (left @ right)
+    let gold = List.sort ~compare:Pervasives.compare (left @ right)
     and merged =
       merge (of_list left) (of_list right) ~cmp:Pervasives.compare
       |> to_list
