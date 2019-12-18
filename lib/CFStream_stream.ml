@@ -241,7 +241,7 @@ let group_aux xs map eq =
   in
   from for_each_group
 
-let group xs ~f = group_aux xs f ( = )
+let group xs ~f = group_aux xs f Poly.( = )
 
 let group_by xs ~eq = group_aux xs ident eq
 
@@ -473,7 +473,7 @@ let uniq xs =
           match next xs with
           | None -> None
           | Some x ->
-              if x = !prev then
+              if Poly.(x = !prev) then
                 aux i
               else (
                 prev := x ;
