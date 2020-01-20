@@ -6,10 +6,10 @@
     "buildsInSource": "_build"
   },
   "dependencies": {
-    "ocaml": ">=4.04.1",
-    "@opam/dune": "1.8.2",
-    "@opam/core_kernel": "v0.11.1",
-    "@opam/ounit": "2.0.8"
+    "ocaml": ">=4.04.1 <4.08.0",
+    "@opam/dune": "<=2.0.0",
+    "@opam/core_kernel": ">=v0.11.0",
+    "@opam/ounit": "*"
   },
   "devDependencies": {
     "@opam/merlin": "*",
@@ -17,8 +17,5 @@
     "@opam/odoc": "*",
     "refmterr": "*",
     "@opam/utop": "*"
-  },
-  "resolutions": {
-    "ocaml": "4.6.1000"
   }
 }
