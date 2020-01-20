@@ -1,5 +1,12 @@
 CFStream Release Notes
 
+1.3.1 2020-01-20
+----------------
+* Fix build for core_kernel v0.13.0.
+* Update build from jbuilder to dune.
+* Add esy support for developers.
+* Format code with ocamlformat.
+
 1.3.0 2018-04-11
 ----------------
 * Require ocaml >= 4.06.0.
@@ -21,7 +28,7 @@ CFStream Release Notes
 
 1.2.0 2015-04-25
 ----------------
-* Add `map2` and `all` functions. 
+* Add `map2` and `all` functions.
 * Add Result and Or_error modules.
 * #4: skip now returns the stream in input instead of fresh one
 
