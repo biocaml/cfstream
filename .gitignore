@@ -4,3 +4,6 @@
 /tmp
 *~
 .DS_Store
+/_esy
+/esy.lock
+/node_modules

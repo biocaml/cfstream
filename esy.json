@@ -1,0 +1,21 @@
+{
+  "name": "cfstream",
+  "esy": {
+    "build": "dune build -p #{self.name}",
+    "buildDev": "refmterr dune build --root . --only-packages #{self.name}",
+    "buildsInSource": "_build"
+  },
+  "dependencies": {
+    "ocaml": ">=4.04.1 <4.08.0",
+    "@opam/dune": "<=2.0.0",
+    "@opam/core_kernel": ">=v0.11.0",
+    "@opam/ounit": "*"
+  },
+  "devDependencies": {
+    "@opam/merlin": "*",
+    "@opam/ocamlformat": "*",
+    "@opam/odoc": "*",
+    "refmterr": "*",
+    "@opam/utop": "*"
+  }
+}
