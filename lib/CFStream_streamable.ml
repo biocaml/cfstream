@@ -5,7 +5,6 @@
     with [Streamable] if possible.
 *)
 module type S = sig
-
   (** Type of the datastructure. *)
   type 'a t
 
@@ -19,13 +18,11 @@ module type S = sig
       implementation. For example, duplicate elements in input may be
       ignored if the data structure is a set. *)
   val of_stream : 'a Stream.t -> 'a t
-
 end
 
 module type S2 = sig
+  type ('a, 'b) t
 
-  type ('a,'b) t
-  val to_stream : ('a,'b) t -> ('a * 'b) Stream.t
-  val of_stream : ('a * 'b) Stream.t -> ('a,'b) t
-
+  val to_stream : ('a, 'b) t -> ('a * 'b) Stream.t
+  val of_stream : ('a * 'b) Stream.t -> ('a, 'b) t
 end
