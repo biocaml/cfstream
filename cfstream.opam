@@ -11,11 +11,11 @@ authors: [
 ]
 
 build: [
-  ["jbuilder" "build" "-p" name "-j" jobs]
+  ["dune" "build" "-p" name "-j" jobs]
 ]
 
 depends: [
-  "jbuilder" {build}
+  "dune"
   "core_kernel" {>= "v0.11.0"}
   "ounit" {test}
 ]

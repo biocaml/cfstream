@@ -1,10 +1,14 @@
-.PHONY: all test
-all:
-	jbuilder build @install --dev
+.PHONY: default
+default: dev
 
+.PHONY: dev
+dev:
+	dune build @all --profile dev
+
+.PHONY: test
 test:
-	jbuilder runtest
+	dune runtest
 
 .PHONY: clean
 clean:
-	jbuilder clean
+	dune clean
