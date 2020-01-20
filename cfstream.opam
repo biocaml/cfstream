@@ -4,7 +4,7 @@ dev-repo: "git+https://github.com/biocaml/cfstream.git"
 bug-reports: "https://github.com/biocaml/cfstream/issues"
 license: "LGPL + linking exception"
 maintainer: "Ashish Agarwal <agarwal1975@gmail.com>"
-synopsis: "Stream operations in the style of Core's API."
+synopsis: "Stream operations in the style of Core's API"
 authors: [
   "Philippe Veber <philippe.veber@gmail.com>"
   "Ashish Agarwal <agarwal1975@gmail.com>"
