@@ -1,7 +1,7 @@
 (library
  (name CFStream)
  (public_name cfstream)
- (libraries core_kernel)
+ (libraries core_kernel camlp-streams)
  (synopsis "Stream operations in the style of Core's API.")
 )
 
