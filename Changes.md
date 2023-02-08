@@ -1,5 +1,9 @@
 CFStream Release Notes
 
+1.3.2 2023-02-08
+----------------
+* Add support for OCaml 5.0 #24, thanks @kit-ty-kate
+
 1.3.1 2020-01-20
 ----------------
 * Fix build for core_kernel v0.13.0.
