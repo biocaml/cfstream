@@ -139,14 +139,14 @@ let test_scan () =
 
 let test_merge () =
   let rnd_list () =
-    List.(init 20 ~f:(fun _ -> Random.int 1000) |> sort ~compare:Pervasives.compare)
+    List.(init 20 ~f:(fun _ -> Random.int 1000) |> sort ~compare:Stdlib.compare)
   in
   let f _ =
     let left = rnd_list ()
     and right = rnd_list () in
-    let gold = List.sort ~compare:Pervasives.compare (left @ right)
+    let gold = List.sort ~compare:Stdlib.compare (left @ right)
     and merged =
-      merge (of_list left) (of_list right) ~cmp:Pervasives.compare |> to_list
+      merge (of_list left) (of_list right) ~cmp:Stdlib.compare |> to_list
     in
     assert_equal
       ~printer:int_list_printer
